@@ -15,6 +15,7 @@ class QuadTree
         void setRaiz(NoQuadTree * p) { raiz = p;}
 
         bool inserir(float x, float y);
+        bool busca(float x, float y);
 
     private:
         NoQuadTree * raiz;

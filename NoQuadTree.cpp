@@ -97,3 +97,30 @@ void NoQuadTree::subdivide(){
 
     return false;
 }
+
+bool NoQuadTree::busca(Cidade cidade){
+
+    if ((cidade.latitude > (regiao.y_centro+regiao.tam) 
+        || cidade.latitude < (regiao.y_centro-regiao.tam))
+        && (cidade.longitude > (regiao.x_centro+regiao.tam) 
+        || cidade.longitude < (regiao.x_centro-regiao.tam))) 
+        return false;
+
+    //Verifica se está na lista do nó atual
+    for(int i = 0; i < localizacao.size(); i++){
+        if (localizacao[i].latitude == cidade.latitude 
+            && localizacao[i].longitude == cidade.longitude)
+            return true;
+    }
+
+    //Verifica se já dividiu
+    if (a == NULL)
+        return false;
+    else{
+
+        if (a->busca(cidade)) return true;
+        if (b->busca(cidade)) return true;
+        if (c->busca(cidade)) return true;
+        if (d->busca(cidade)) return true;
+    }
+}

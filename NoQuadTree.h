@@ -39,10 +39,10 @@ class NoQuadTree{
         void setQuadrante(float x, float y, float d);
         
         bool inserir(Cidade c);
+        bool busca(Cidade c);
         void subdivide();
 
     private:
-
         /*
             Diposição dos quadrantes
                 A B

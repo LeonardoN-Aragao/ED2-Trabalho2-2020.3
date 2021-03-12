@@ -23,3 +23,16 @@ bool QuadTree::inserir(float x, float y){
 
     return raiz->inserir(aux);
 }
+
+bool QuadTree::busca(float x, float y){
+
+    if(raiz == NULL)
+        return false;
+    else{
+
+        Cidade aux;
+        aux.longitude = x;
+        aux.latitude = y;
+        return raiz->busca(aux);
+    }
+}
