@@ -1,6 +1,8 @@
 #include <iostream>
 #include "ArvoreAvl.h"
 #include "QuadTree.h"
+#include "ArvoreB.h"
+#include "TabelaHash.h"
 
 using namespace std;
 
