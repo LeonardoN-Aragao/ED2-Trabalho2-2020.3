@@ -1,50 +1,51 @@
+#include <iostream>
 #include "TabelaHash.h"
+#include "InfoCidade.h"
 
-TabelaHash::TabelaHash(int tam, int sond){
+TabelaHash::TabelaHash(long tam){
     tamanho = tam;
-    tabela = new int[tamanho];
+    tabela = new InfoCidade[tamanho]();
     colisoes = 0;
-
-    for(int i = 0; i<tamanho; i++){
-        tabela[i] = -1;
-    }
-
-    sondagem = sond;
 }
 
-void TabelaHash::add(int chave){
-                
-    for(int i = 0; i < tamanho; i++){
+void TabelaHash::add(InfoCidade cidade){
+    
+    int chave = stoi(cidade.getData())+cidade.getCodigoCidade();
+
+    for(int i = 0; i < 20; i++){
         
-        int pos;
+        int pos = linear(chave,i);
 
-        if(sondagem == 1)
-            pos = linear(chave,i);
-        else
-            pos = dupla(chave,i);
-
-        if(tabela[pos] == -1){
-            tabela[pos] = chave;
+        if(tabela[pos].getCodigoCidade() == 0){
+            tabela[pos] = cidade;
             return;
         }
-        else
-            colisoes++;
+        else{ // Re-hashing
+
+            pos = dupla(chave,i);
+            if(tabela[pos].getCodigoCidade() == 0){
+                tabela[pos] = cidade;
+                return;
+            }
+        }
     }
 }
 
-int TabelaHash::search(int chave, int iteracoes){
+int TabelaHash::auxSearch(int chave, int iteracoes){
     int resposta = -1;
     
     for(int i = 0; i < iteracoes; i++){
-        int resposta;
         
-        if(sondagem == 1)
-            resposta = linear(chave,i);
-        else
-            resposta = dupla(chave,i);
+        int resposta = linear(chave,i);
 
         if (resposta == chave || resposta == -1)
             break;
+        else{
+
+            resposta = dupla(chave,i);
+            if (resposta == chave || resposta == -1)
+                break;
+        }
     }
 
     return resposta;

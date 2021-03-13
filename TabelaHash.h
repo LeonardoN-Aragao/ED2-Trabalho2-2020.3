@@ -1,4 +1,5 @@
 #include <iostream>
+#include "InfoCidade.h"
 
 using namespace std;
 
@@ -6,8 +7,8 @@ class TabelaHash{
 
     public:
 
-        TabelaHash(int tam, int sond);
-        ~TabelaHash(){ delete tabela;}
+        TabelaHash(long tam);
+        ~TabelaHash(){ delete [] this->tabela;}
 
         int funcHash(int chave){ return chave % tamanho;}
         int funcHash2(int chave){ return 1 + (chave % (tamanho-1));}
@@ -15,13 +16,12 @@ class TabelaHash{
         int dupla(int chave, int iteracoes){ return funcHash(chave) + (iteracoes * funcHash2(chave)) % tamanho;}        
 
         int getColisoes() { return colisoes;}
-        int search(int chave, int iteracoes);
-        void add(int chave);
+        int search(string data,int codigo){ return auxSearch((stoi(data)*codigo),20);}
+        int auxSearch(int chave, int iteracoes);
+        void add(InfoCidade cidade);
 
     private:
-
-        int tamanho;
-        int * tabela;
-        int sondagem;
+        long tamanho;
+        InfoCidade * tabela;
         int colisoes;
 };
