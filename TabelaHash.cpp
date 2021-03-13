@@ -10,11 +10,11 @@ TabelaHash::TabelaHash(long tam){
 
 void TabelaHash::add(InfoCidade cidade){
     
-    int chave = stoi(cidade.getData())+cidade.getCodigoCidade();
+    int chave = getDia(cidade.getData())*cidade.getCodigoCidade();
 
     for(int i = 0; i < 20; i++){
         
-        int pos = linear(chave,i);
+        int pos = dupla(chave,i);
 
         if(tabela[pos].getCodigoCidade() == 0){
             tabela[pos] = cidade;
@@ -22,7 +22,9 @@ void TabelaHash::add(InfoCidade cidade){
         }
         else{ // Re-hashing
 
-            pos = dupla(chave,i);
+            colisoes ++;
+
+            pos = linear(chave,i);
             if(tabela[pos].getCodigoCidade() == 0){
                 tabela[pos] = cidade;
                 return;
