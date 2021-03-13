@@ -1,10 +1,15 @@
 #include <iostream>
 #include <vector>
 
+// 52,5200050,Abadia de Goiás,-16.7573,-49.4412,FALSE
 struct Cidade
 {
+    int codigo_estado;
+    int codigo_cidade;
+    std::string nome_cidade;
     float longitude;
     float latitude;
+    bool isEstado;
 };
 
 //latitude -34, 5

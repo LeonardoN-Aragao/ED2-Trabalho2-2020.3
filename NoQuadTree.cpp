@@ -123,4 +123,6 @@ bool NoQuadTree::busca(Cidade cidade){
         if (c->busca(cidade)) return true;
         if (d->busca(cidade)) return true;
     }
+    
+    return false;
 }

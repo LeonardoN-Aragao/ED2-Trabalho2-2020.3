@@ -10,7 +10,7 @@ class ArvoreB
         void noOverflow(NoB* no);
         void noUnderflow(NoB* noE,NoB* noD, NoB* pai,int indice);
         NoB* buscarValue(int value);
-        bool InserirNoB(int value);
+        void InserirNoB(int value);
 
         // Variáveis de análise
         int comparacao;

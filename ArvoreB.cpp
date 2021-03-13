@@ -33,7 +33,7 @@ NoB* ArvoreB::buscarValue(int value){
         return raiz->buscaNo(value);
 }
 
-bool ArvoreB::InserirNoB(int value){
+void ArvoreB::InserirNoB(int value){
 
     //Nesse caso, nao há no na arvore
     if(raiz == NULL){
@@ -42,7 +42,6 @@ bool ArvoreB::InserirNoB(int value){
         raiz->getValores()[0]=value;
         raiz->incrementaQuantChaves();
         insercoes++;
-        return true;
     }
     else
     {
