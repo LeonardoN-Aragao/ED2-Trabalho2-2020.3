@@ -7,6 +7,23 @@ ArvoreAvl::ArvoreAvl(bool b){
     comparacao = 0;
 }
 
+NoAvl* auxDeletar(NoAvl * p){
+    
+    if(p != NULL){
+        p->setEsq(auxDeletar(p->getEsq()));
+        p->setDir(auxDeletar(p->getDir()));
+        
+        delete p;
+        p = NULL;
+    }
+
+    return NULL;
+}
+
+ArvoreAvl::~ArvoreAvl(){
+    raiz = auxDeletar(raiz);
+}
+
 int ArvoreAvl::auxGetAltura(NoAvl*p){
 
     if(p == NULL)

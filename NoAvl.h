@@ -16,7 +16,7 @@ class NoAvl{
             esq = NULL;
             dir = NULL;
         }
-        virtual ~NoAvl(){};
+        ~NoAvl(){};
 
         int getId(){ return id;}
         int getFator(){ return fator;}

@@ -3,7 +3,7 @@
 class ArvoreAvl{
     public:
         ArvoreAvl(bool b);
-        virtual ~ArvoreAvl(){};   
+        ~ArvoreAvl(); //TODO: Verificar se possivel
         
         NoAvl * raiz;
         bool balanceada;
