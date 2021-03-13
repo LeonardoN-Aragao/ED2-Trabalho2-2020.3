@@ -13,9 +13,9 @@ class NoB{
         int * getValores() {return valores;}
         NoB** getFilhos() {return filhos;}
         int getNumChaves() {return numChaves;}
-        void setValores(int * v) {valores = v;}
-        NoB* buscaNo(int value); 
-        void split(int value, NoB* p);
+        void setValores(int * id) {valores = id;}
+        NoB* buscaNo(int id); 
+        void split(int id, NoB* p);
         void insereValor(int valor);
         void incrementaQuantChaves() { numChaves++;}
         bool isFolha();

@@ -32,12 +32,12 @@ NoAvl * ArvoreAvl::busca(int value){
 
     while(p!=NULL){
         
-        if(p->getValue() == value){
+        if(p->getId() == value){
             comparacao++;
             return p;
         }
 
-        if(value > p->getValue())
+        if(value > p->getId())
             p = p->getDir();
         else
             p = p->getEsq();
@@ -98,19 +98,19 @@ void ArvoreAvl::insere(int value){
         while(q!=NULL){
             aux = q;
             //valor já adicionado
-            if(q->getValue() == value){
+            if(q->getId() == value){
                 comparacao++;
                 return;
             }
 
-            if(value > p->getValue())
+            if(value > p->getId())
                 q = q->getDir();
             else
                 q = q->getEsq();
             comparacao++;
         }
 
-        if(value > aux->getValue())
+        if(value > aux->getId())
             aux->setDir(p);
         else
             aux->setEsq(p);
@@ -149,7 +149,7 @@ void ArvoreAvl::remove(int value){
             while (!aux->getDir()) {
                 aux = aux->getDir();
             }
-            p->setValue(aux->getValue());
+            p->setId(aux->getId());
             delete aux;
         }
         

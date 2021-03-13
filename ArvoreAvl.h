@@ -13,9 +13,9 @@ class ArvoreAvl{
         int auxGetAltura(NoAvl * p);
         int  getComparacao(){ return comparacao;}
         bool eBalanciada(){return balanceada;}
-        void insere(int value);
-        void remove(int value);
-        NoAvl * busca(int value);
+        void insere(int id);
+        void remove(int id);
+        NoAvl * busca(int id);
         void atualizaFator(NoAvl* p);
         void verificaBalanceamento(NoAvl * p);
 
