@@ -18,6 +18,7 @@ using namespace std;
     Árvore AVL  Inserção e busca
     Árvore B    Inserção e busca
 
+    ----- Anotações -----
 
     É importante frisar que o código da cidade no arquivo com a contagem de casos
     possui um dígito a menos à direita. No entanto, isso não é um problema, pois
@@ -28,12 +29,17 @@ using namespace std;
     
     Solução: (numero de 7 digitos -(numero de 6 digitos * 10) < 10 && >= 0)
 
-    Lembrar de avisar que são 5570 cidades;
+    Lembrar de avisar que são 5570 cidades e 1.431.490 (sem contar cabeçalho);
 
     Você deverá armazenar estes registros em uma tabela hash. Dimensione a tabela 
     adequadamente e utilize uma função de hash que permita uma boa distribuição de 
     chaves na tabela. Escolha também uma técnica para tratamento de colisões. 
     Utilize como chave o par (código da cidade, data).
+
+    S1) Obter o total de casos de uma cidade;
+    S2) Obter o total de casos nas cidades contidas
+    no intervalo [(x0, y0), (x1, y1)], onde x0 e x1 
+    são latitudes e y0 e y1 são longitudes.
 
     ----- Trabalho Solicitado -----
 
@@ -49,8 +55,70 @@ using namespace std;
 
 */
 
-// Etapa 1 - Ler brazil_cities_coordinates.csv e armazenar na QuadTree
-void etapa1(QuadTree * aux){
+void menuSelecionado(char a){
+
+    switch (a){
+
+        case '1':
+        {   
+            // Inserção de N cidades na quad tree
+
+            break;
+        }
+        case '2':
+        {
+            // Inserção de N registros na tabela hash
+
+            break;
+        }
+        case '3':
+        {        
+            // Inserção de N chaves na árvore AVL
+
+            break;
+        }
+        case '4':
+        {
+            // Inserção de N chaves na árvore B
+
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+void menu(){
+
+    char menu;
+    while (true)
+    {   
+        cout << endl;
+        cout << "[1] - Inserção de N cidades na quad tree" << endl;
+        cout << "[2] - Inserção de N registros na tabela hash" << endl;
+        cout << "[3] - Inserção de N chaves na árvore AVL" << endl;
+        cout << "[4] - Inserção de N chaves na árvore B" << endl;
+        cout << endl;
+        do
+        {
+            cout << "Digite uma opcao do menu ou 'q' para continuar: ";
+            cin >> menu;
+        } while (((menu < '0' || menu > '5') && (menu < 'a' || menu > 'z')) && menu != 'q');
+
+        if (menu == 'q')
+        {
+            return;
+        }
+        menuSelecionado(menu);
+    }
+}
+
+void leituraCoordenadas(QuadTree* aux, int n){
+
+    if(n > 5571 || n < 0){
+        cout<<"Erro: Valor de N inválido!"<<endl;
+        return;
+    }
 
     fstream file;
     string name = "brazil_cities_coordinates.csv";
@@ -60,9 +128,9 @@ void etapa1(QuadTree * aux){
         
         string str;
         getline(file, str); // para nao pegar a primeira linha
-        int count = 0;
+        int contador = 0;
 
-        while(!file.eof()){
+        while(contador < n){
 
             str = ' ';
             Cidade c;
@@ -90,7 +158,7 @@ void etapa1(QuadTree * aux){
 
             aux->inserir(c);
             
-            count++;
+            contador++;
 
             //Teste
             /*
@@ -104,12 +172,18 @@ void etapa1(QuadTree * aux){
             return;
             */
         }       
-        cout<<count<<" cidades lidas."<<endl;
+        cout<<contador<<" cidades lidas."<<endl;
+        file.close();
     }
     else{
         cout<<"Erro: arquivo "<<name<<" não encontrado!"<<endl;
         exit(1);
     }
+}
+
+// Etapa 1 - Ler brazil_cities_coordinates.csv e armazenar na QuadTree
+void etapa1(QuadTree * aux){
+    leituraCoordenadas(aux,5570);
 }
 
 // Etapa 2 - Ler brazil_covid19_cities_processado.csv e armazenar na Tabela Hash
@@ -151,7 +225,7 @@ void etapa2(TabelaHash * aux){
             aux->add(c);
 
             count++;
-            cout<<count<<" registros lidos."<<endl;
+
             // Teste
             /*
             cout<<c.getData()<<" "
@@ -164,7 +238,8 @@ void etapa2(TabelaHash * aux){
             return;
             */
         }       
-        cout<<count<<" registros lidos.";
+        cout<<count<<" registros lidos."<<endl;
+        file.close();
     }
     else{
         cout<<"Erro: arquivo "<<name<<" não encontrado!"<<endl;
@@ -173,97 +248,108 @@ void etapa2(TabelaHash * aux){
 }
 
 // Etapa 3 - Implementação de estruturas de dados balanceada
-void etapa3(){
+void etapa3(TabelaHash * aux){
+    //TODO: Se der tempo "A ordenação da árvore será determinada pelo par (código da cidade, data)."
 
+    ArvoreB * b = new ArvoreB(200); 
+    ArvoreAvl * avl = new ArvoreAvl(true);
+
+    fstream file;
+    string name = "brazil_covid19_cities_processado.csv";
+    file.open(name, fstream::in);
+
+    if(file.is_open()){
+        
+        string str;
+        getline(file, str); // para nao pegar a primeira linha
+        int count = 0;
+
+        while(!file.eof()){
+
+            str = ' ';
+            string data;
+            int codigo;
+
+            getline(file, str,',');
+            data = str;
+
+            getline(file, str,','); //siglaEstado
+            getline(file, str,','); //NomeCidade
+
+
+            getline(file, str,',');
+            codigo = stoi(str);
+
+            getline(file, str,','); //Casos
+            getline(file, str); //Mortes    
+
+            long id = aux->getDia(data)*codigo;
+
+            b->InserirNoB(id); 
+            avl->insere(id);
+
+            count ++;
+        }       
+        cout<<count<<" registros lidos."<<endl;
+        cout<<"Deletando Arvore B e Arvore Avl."<<endl;
+
+        delete b;
+        delete avl;
+        file.close();
+    }
+    else{
+        cout<<"Erro: arquivo "<<name<<" não encontrado!"<<endl;
+        exit(1);
+    }
 }
 
 // Etapa 4 - Modulo de Testes
 void etapa4(){
-
+    menu();
 }
 
 // Etapa 5 - Analise das estruturas de dados balanceada
 void etapa5(){
+    
 
-}
-
-void menuSelecionado(char a)
-{
-    switch (a){
-
-    case '1':
-    {   
-        break;
-    }
-    case '2':
-    {
-        break;
-    }
-    case '3':
-    {        
-        break;
-    }
-    case '4':
-    {
-        break;
-    }
-    default:
-        break;
-    }
-}
-
-/* Menu de funcionalidades*/
-void menu()
-{
-    //System("tput reset");
-    char menu;
-    while (true)
-    {   
-        cout << endl;
-        cout << "[1] - Inserção de N cidades na quad tree" << endl;
-        cout << "[2] - Inserção de N registros na tabela hash" << endl;
-        cout << "[3] - Inserção de N chaves na árvore AVL" << endl;
-        cout << "[4] - Inserção de N chaves na árvore B" << endl;
-        cout << endl;
-        do
-        {
-            cout << "Digite uma opcao do menu ou 'q' para continuar: ";
-            cin >> menu;
-        } while (((menu < '0' || menu > '5') && (menu < 'a' || menu > 'z')) && menu != 'q');
-
-        if (menu == 'q')
-        {
-            cout << "Saindo..." << endl;
-            return;
-        }
-        menuSelecionado(menu);
-    }
 }
 
 int main(){
 
     srand(0);
 
-    cout<<"Etapa 1"<<endl;
+    cout<<"----- Etapa 1 -----"<<endl;
     cout<<"Lendo arquivo brazil_cities_coordinates.csv ..."<<endl;
 
     QuadTree * a = new QuadTree();
     etapa1(a);
 
-    cout<<"\nEtapa 2"<<endl;
+    //--------------------------------------------------------------------
+
+    cout<<"\n----- Etapa 2 -----"<<endl;
     cout<<"Lendo arquivo brazil_covid19_cities_processado.csv ..."<<endl;
     
-    TabelaHash * tabela = new TabelaHash(1431490*5); //Ver qual sondagem usar
+    TabelaHash * tabela = new TabelaHash(1431490*11);
     etapa2(tabela);
+    cout<<"Colisoes: "<<tabela->getColisoes()<<endl;
 
-    cout<<"\nEtapa 3"<<endl;
-    etapa3();
+    //--------------------------------------------------------------------
 
-    cout<<"\nEtapa 4"<<endl;
+    cout<<"\n----- Etapa 3-----"<<endl;
+    cout<<"Testando implementaçãos ArvoreB e ArvoreAvl..."<<endl; 
+    
+    etapa3(tabela);
+
+    //--------------------------------------------------------------------
+
+    cout<<"\n----- Etapa 4 -----"<<endl;
     cout<<"Modulo de Testes"<<endl;
-    menu();
 
-    cout<<"\nEtapa 5"<<endl;
+    etapa4();
+
+    //--------------------------------------------------------------------
+
+    cout<<"\n----- Etapa 5 -----"<<endl;
     etapa5();
     
     return 0;

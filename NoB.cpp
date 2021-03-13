@@ -5,7 +5,10 @@ NoB::NoB(int m){
     d=m;
     valores = new int[2*d-1];
     filhos = new NoB* [2*d];
-    for (int i=0;i<2*d;i++) valores[i]= 0;
+    for (int i=0; i < 2*d; i++) 
+        valores[i]= 0;
+    for (int i =0; i < 2*d; i++)
+        filhos[i] = NULL;
     numChaves = 0;
 }
 
@@ -18,7 +21,7 @@ NoB::~NoB(){
 // Verifica se é nó folha
 bool NoB::isFolha(){
 
-    if(this->filhos[0]->numChaves == 0)
+    if(this->filhos == NULL)
         return false;
     return true;
 }
