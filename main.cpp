@@ -113,9 +113,9 @@ void menu(){
     }
 }
 
-void leituraCoordenadas(QuadTree* aux, int n){
+void leituraCoordenadas(QuadTree* aux, int N){
 
-    if(n > 5571 || n < 0){
+    if(N > 5571 || N < 0){
         cout<<"Erro: Valor de N inválido!"<<endl;
         return;
     }
@@ -130,7 +130,7 @@ void leituraCoordenadas(QuadTree* aux, int n){
         getline(file, str); // para nao pegar a primeira linha
         int contador = 0;
 
-        while(contador < n){
+        while(contador < N){
 
             str = ' ';
             Cidade c;
@@ -181,13 +181,12 @@ void leituraCoordenadas(QuadTree* aux, int n){
     }
 }
 
-// Etapa 1 - Ler brazil_cities_coordinates.csv e armazenar na QuadTree
-void etapa1(QuadTree * aux){
-    leituraCoordenadas(aux,5570);
-}
-
-// Etapa 2 - Ler brazil_covid19_cities_processado.csv e armazenar na Tabela Hash
-void etapa2(TabelaHash * aux){
+void leituraProcessados(TabelaHash * aux, int N){
+    
+    if(N > 1431490 || N < 0){
+        cout<<"Erro: Valor de N inválido!"<<endl;
+        return;
+    }
 
     fstream file;
     string name = "brazil_covid19_cities_processado.csv";
@@ -199,7 +198,7 @@ void etapa2(TabelaHash * aux){
         getline(file, str); // para nao pegar a primeira linha
         int count = 0;
 
-        while(!file.eof()){
+        while(count < N){
 
             str = ' ';
             InfoCidade c;
@@ -247,12 +246,14 @@ void etapa2(TabelaHash * aux){
     }
 }
 
-// Etapa 3 - Implementação de estruturas de dados balanceada
-void etapa3(TabelaHash * aux){
-    //TODO: Se der tempo "A ordenação da árvore será determinada pelo par (código da cidade, data)."
+void armazearId(ArvoreB * b, ArvoreAvl * avl,int N){
+    
+    if(N > 1431490 || N < 0){
+        cout<<"Erro: Valor de N inválido!"<<endl;
+        return;
+    }
 
-    ArvoreB * b = new ArvoreB(200); 
-    ArvoreAvl * avl = new ArvoreAvl(true);
+    TabelaHash aux(1); //TODO: retirar apos mover função getDia() de lugar
 
     fstream file;
     string name = "brazil_covid19_cities_processado.csv";
@@ -264,7 +265,7 @@ void etapa3(TabelaHash * aux){
         getline(file, str); // para nao pegar a primeira linha
         int count = 0;
 
-        while(!file.eof()){
+        while(count < N){
 
             str = ' ';
             string data;
@@ -283,15 +284,18 @@ void etapa3(TabelaHash * aux){
             getline(file, str,','); //Casos
             getline(file, str); //Mortes    
 
-            long id = aux->getDia(data)*codigo;
+            long id = aux.getDia(data)*codigo;
 
-            b->InserirNoB(id); 
+            if(b!= NULL)
+                b->InserirNoB(id); 
+                
+            if(avl!= NULL)
             avl->insere(id);
 
             count ++;
         }       
         cout<<count<<" registros lidos."<<endl;
-        cout<<"Deletando Arvore B e Arvore Avl."<<endl;
+        cout<<"Deletando Arvore."<<endl;
 
         delete b;
         delete avl;
@@ -303,6 +307,28 @@ void etapa3(TabelaHash * aux){
     }
 }
 
+// Etapa 1 - Ler brazil_cities_coordinates.csv e armazenar na QuadTree
+void etapa1(QuadTree * aux){
+    leituraCoordenadas(aux,5570);
+}
+
+// Etapa 2 - Ler brazil_covid19_cities_processado.csv e armazenar na Tabela Hash
+void etapa2(TabelaHash * aux){
+    leituraProcessados(aux,1431490);
+}
+
+// Etapa 3 - Implementação de estruturas de dados balanceada
+void etapa3(){
+    //TODO: Se der tempo "A ordenação da árvore será determinada pelo par (código da cidade, data)"
+    ArvoreB * b = new ArvoreB(200); 
+    ArvoreAvl * avl = new ArvoreAvl(true);
+
+    armazearId(b,avl,1431490);
+
+    delete b;
+    delete avl;
+}
+
 // Etapa 4 - Modulo de Testes
 void etapa4(){
     menu();
@@ -311,7 +337,6 @@ void etapa4(){
 // Etapa 5 - Analise das estruturas de dados balanceada
 void etapa5(){
     
-
 }
 
 int main(){
@@ -331,14 +356,14 @@ int main(){
     
     TabelaHash * tabela = new TabelaHash(1431490*11);
     etapa2(tabela);
-    cout<<"Colisoes: "<<tabela->getColisoes()<<endl;
+    cout<<tabela->getColisoes()<<" colisoes."<<endl;
 
     //--------------------------------------------------------------------
 
     cout<<"\n----- Etapa 3-----"<<endl;
     cout<<"Testando implementaçãos ArvoreB e ArvoreAvl..."<<endl; 
     
-    etapa3(tabela);
+    etapa3();
 
     //--------------------------------------------------------------------
 
