@@ -18,10 +18,8 @@ NoB::~NoB(){
 // Verifica se é nó folha
 bool NoB::isFolha(){
 
-    if(this->filhos!=NULL)
-    {
+    if(this->filhos[0]->numChaves == 0)
         return false;
-    }
     return true;
 }
 
