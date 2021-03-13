@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INFOCIDADE_H
+#define INFOCIDADE_H
 #include <iostream>
 
 // 2020-03-27,AC,Acrelândia,120001.0,0,0
@@ -37,3 +38,5 @@ class InfoCidade{
         int casos;
         int mortes;
 };
+
+#endif
