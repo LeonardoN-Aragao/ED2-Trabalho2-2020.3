@@ -294,7 +294,7 @@ void menuSelecionado(char a){
 
             ArvoreAvl * avl = new ArvoreAvl(true);
             armazearId(NULL,avl,n);
-            delete avl;
+            //delete avl;
 
             break;
         }
@@ -310,7 +310,6 @@ void menuSelecionado(char a){
             
             ArvoreB * b = new ArvoreB(d); 
             armazearId(b,NULL,n);
-            delete b;
 
             break;
         }
@@ -361,8 +360,6 @@ void etapa3(){
     ArvoreAvl * avl = new ArvoreAvl(true);
 
     armazearId(b,avl,1431490);
-    //delete avl;
-    //delete b;
 }
 
 // Etapa 4 - Modulo de Testes
