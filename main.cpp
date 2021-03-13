@@ -20,6 +20,8 @@ using namespace std;
 
     ----- Anotações -----
 
+    Lembrar de avisar que são 5570 cidades e 1.431.490 (sem contar cabeçalho);
+
     É importante frisar que o código da cidade no arquivo com a contagem de casos
     possui um dígito a menos à direita. No entanto, isso não é um problema, pois
     os outros 6 dígitos são suficientes para identificar unicamente a cidade. 
@@ -29,12 +31,14 @@ using namespace std;
     
     Solução: (numero de 7 digitos -(numero de 6 digitos * 10) < 10 && >= 0)
 
-    Lembrar de avisar que são 5570 cidades e 1.431.490 (sem contar cabeçalho);
-
     Você deverá armazenar estes registros em uma tabela hash. Dimensione a tabela 
     adequadamente e utilize uma função de hash que permita uma boa distribuição de 
     chaves na tabela. Escolha também uma técnica para tratamento de colisões. 
     Utilize como chave o par (código da cidade, data).
+
+    Para estes testes, dependendo do valor de N, você deverá exibir a saída no 
+    console ou salvá-la em um arquivo. Se N <= 20, utilize a saída em console. 
+    Caso contrário, utilize a saída em arquivo.
 
     S1) Obter o total de casos de uma cidade;
     S2) Obter o total de casos nas cidades contidas
@@ -52,66 +56,7 @@ using namespace std;
     Etapa 4 - Modulo de Testes
 
     Etapa 5 - Analise das estruturas de dados balanceada
-
 */
-
-void menuSelecionado(char a){
-
-    switch (a){
-
-        case '1':
-        {   
-            // Inserção de N cidades na quad tree
-
-            break;
-        }
-        case '2':
-        {
-            // Inserção de N registros na tabela hash
-
-            break;
-        }
-        case '3':
-        {        
-            // Inserção de N chaves na árvore AVL
-
-            break;
-        }
-        case '4':
-        {
-            // Inserção de N chaves na árvore B
-
-            break;
-        }
-        default:
-            break;
-    }
-}
-
-void menu(){
-
-    char menu;
-    while (true)
-    {   
-        cout << endl;
-        cout << "[1] - Inserção de N cidades na quad tree" << endl;
-        cout << "[2] - Inserção de N registros na tabela hash" << endl;
-        cout << "[3] - Inserção de N chaves na árvore AVL" << endl;
-        cout << "[4] - Inserção de N chaves na árvore B" << endl;
-        cout << endl;
-        do
-        {
-            cout << "Digite uma opcao do menu ou 'q' para continuar: ";
-            cin >> menu;
-        } while (((menu < '0' || menu > '5') && (menu < 'a' || menu > 'z')) && menu != 'q');
-
-        if (menu == 'q')
-        {
-            return;
-        }
-        menuSelecionado(menu);
-    }
-}
 
 void leituraCoordenadas(QuadTree* aux, int N){
 
@@ -288,7 +233,7 @@ void armazearId(ArvoreB * b, ArvoreAvl * avl,int N){
 
             if(b!= NULL)
                 b->InserirNoB(id); 
-                
+
             if(avl!= NULL)
             avl->insere(id);
 
@@ -304,6 +249,98 @@ void armazearId(ArvoreB * b, ArvoreAvl * avl,int N){
     else{
         cout<<"Erro: arquivo "<<name<<" não encontrado!"<<endl;
         exit(1);
+    }
+}
+
+void menuSelecionado(char a){
+
+    switch (a){
+
+        case '1':
+        {   
+            // Inserção de N cidades na quad tree
+
+            int n;
+            cout<<"Digite o valor de N: ";
+            cin>>n;
+
+            QuadTree * a = new QuadTree();
+            leituraCoordenadas(a,n);
+            delete a;
+
+            break;
+        }
+        case '2':
+        {
+            // Inserção de N registros na tabela hash
+
+            int n;
+            cout<<"Digite o valor de N: ";
+            cin>>n;
+
+            TabelaHash * t = new TabelaHash(n*11);
+            leituraProcessados(t,n);
+            delete t;
+
+            break;
+        }
+        case '3':
+        {        
+            // Inserção de N chaves na árvore AVL
+
+            int n;
+            cout<<"Digite o valor de N: ";
+            cin>>n;
+
+            ArvoreAvl * avl = new ArvoreAvl(true);
+            armazearId(NULL,avl,n);
+            delete avl;
+
+            break;
+        }
+        case '4':
+        {
+            // Inserção de N chaves na árvore B
+
+            int n,d;
+            cout<<"Digite o valor de N: ";
+            cin>>n;
+            cout<<"Digite o valor de d: ";
+            cin>>d;
+            
+            ArvoreB * b = new ArvoreB(d); 
+            armazearId(b,NULL,n);
+            delete b;
+
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+void menu(){
+
+    char menu;
+    while (true)
+    {   
+        cout << endl;
+        cout << "[1] - Inserção de N cidades na quad tree" << endl;
+        cout << "[2] - Inserção de N registros na tabela hash" << endl;
+        cout << "[3] - Inserção de N chaves na árvore AVL" << endl;
+        cout << "[4] - Inserção de N chaves na árvore B" << endl;
+        cout << endl;
+        do
+        {
+            cout << "Digite uma opcao do menu ou 'q' para continuar: ";
+            cin >> menu;
+        } while (((menu < '0' || menu > '5') && (menu < 'a' || menu > 'z')) && menu != 'q');
+
+        if (menu == 'q')
+        {
+            return;
+        }
+        menuSelecionado(menu);
     }
 }
 
@@ -324,9 +361,8 @@ void etapa3(){
     ArvoreAvl * avl = new ArvoreAvl(true);
 
     armazearId(b,avl,1431490);
-
-    delete b;
-    delete avl;
+    //delete avl;
+    //delete b;
 }
 
 // Etapa 4 - Modulo de Testes
