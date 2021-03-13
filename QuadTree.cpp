@@ -8,7 +8,7 @@ QuadTree::~QuadTree(){
     delete raiz;
 }
 
-bool QuadTree::inserir(float x, float y){
+bool QuadTree::inserir(Cidade aux){
 
     //latitude -34, 5
     //longitude  -32, -73
@@ -16,11 +16,6 @@ bool QuadTree::inserir(float x, float y){
         raiz = new NoQuadTree();
         raiz->setQuadrante(0,0,100.0);
     }
-
-    Cidade aux;
-    aux.longitude = x;
-    aux.latitude = y;
-
     return raiz->inserir(aux);
 }
 
