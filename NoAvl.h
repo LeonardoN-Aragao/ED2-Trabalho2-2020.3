@@ -3,7 +3,7 @@
 class NoAvl{
 
     public:
-        int value;
+        int id;
         int fator;
         NoAvl * pai;
         NoAvl * esq;
@@ -11,20 +11,20 @@ class NoAvl{
 
         NoAvl(int v){
             fator = 0; 
-            value = v;
+            id = v;
             pai = NULL;
             esq = NULL;
             dir = NULL;
         }
         virtual ~NoAvl(){};
 
-        int getValue(){ return value;}
+        int getId(){ return id;}
         int getFator(){ return fator;}
         NoAvl * getEsq(){ return esq;}
         NoAvl * getDir(){ return dir;}
         NoAvl * getPai(){ return pai;}
 
-        void setValue(int v){ value = v;}
+        void setId(int v){ id = v;}
         void setFator(int f){ fator = f;}
         void setEsq(NoAvl * p){ esq = p;}
         void setDir(NoAvl * p){ dir = p;}
