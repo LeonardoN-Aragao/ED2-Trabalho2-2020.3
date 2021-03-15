@@ -16,6 +16,7 @@ class QuadTree
 
         bool inserir(Cidade aux);
         bool busca(float x, float y);
+        std::vector<Cidade> buscaQuadrante(float x, float y, float d);
 
     private:
         NoQuadTree * raiz;

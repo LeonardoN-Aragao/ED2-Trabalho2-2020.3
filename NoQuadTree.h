@@ -45,6 +45,7 @@ class NoQuadTree{
         
         bool inserir(Cidade c);
         bool busca(Cidade c);
+        std::vector<Cidade> buscaNoQuadrante(Quadrante a, std::vector<Cidade> p);
         void subdivide();
 
     private:

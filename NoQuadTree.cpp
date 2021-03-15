@@ -98,6 +98,38 @@ void NoQuadTree::subdivide(){
     return false;
 }
 
+std::vector<Cidade> NoQuadTree::buscaNoQuadrante(Quadrante quad, std::vector<Cidade> p){
+
+    //Checa quadrante
+    if ((quad.y_centro > (regiao.y_centro+regiao.tam) 
+        || quad.y_centro < (regiao.y_centro-regiao.tam))
+        && (quad.x_centro > (regiao.x_centro+regiao.tam) 
+        || quad.x_centro < (regiao.x_centro-regiao.tam))) 
+        return p;
+
+    //Checa os objetos do no atual
+    for(int i = 0; i<localizacao.size() ;i++){
+        if(((localizacao[i].latitude < (quad.y_centro+quad.tam) 
+        || localizacao[i].latitude > (quad.y_centro-quad.tam))
+        && (localizacao[i].longitude < (quad.x_centro+quad.tam) 
+        || localizacao[i].longitude > (quad.x_centro-quad.tam))) ){
+            p.push_back(localizacao[i]);
+        }
+    }
+
+    //Procura nos filhos caso tenha algum
+    if (a == NULL)
+        return p;
+    else{
+        a->buscaNoQuadrante(quad,p);
+        b->buscaNoQuadrante(quad,p);
+        c->buscaNoQuadrante(quad,p);
+        d->buscaNoQuadrante(quad,p);
+    }
+    
+    return p;
+}
+
 bool NoQuadTree::busca(Cidade cidade){
 
     if ((cidade.latitude > (regiao.y_centro+regiao.tam) 

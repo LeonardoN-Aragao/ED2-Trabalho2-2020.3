@@ -31,3 +31,14 @@ bool QuadTree::busca(float x, float y){
         return raiz->busca(aux);
     }
 }
+
+std::vector<Cidade> QuadTree::buscaQuadrante(float x, float y, float d){
+    
+    std::vector<Cidade> aux;
+    Quadrante a;
+    a.tam = d;
+    a.x_centro = x;
+    a.y_centro = y;
+
+    return raiz->buscaNoQuadrante(a,aux);
+}

@@ -7,6 +7,9 @@
 
 using namespace std;
 
+//TODO: Tirar essa variavel global
+string PATH;
+
 /*
     ----- Esturturas -----
 
@@ -61,13 +64,17 @@ using namespace std;
 void leituraCoordenadas(QuadTree* aux, int N){
 
     if(N > 5571 || N < 0){
-        cout<<"Erro: Valor de N inválido!"<<endl;
+        std::cout<<"Erro: Valor de N inválido!"<<endl;
         return;
     }
 
+    fstream saida;
+    if(N > 20 && N != 5570)
+        saida.open("Log-Etapa4.txt",fstream::out);
+
     fstream file;
     string name = "brazil_cities_coordinates.csv";
-    file.open(name, fstream::in);
+    file.open(PATH + name, fstream::in);
 
     if(file.is_open()){
         
@@ -102,12 +109,18 @@ void leituraCoordenadas(QuadTree* aux, int N){
                 c.isEstado = 1;
 
             aux->inserir(c);
+
+            string mensagem = "Cidade: "+ c.nome_cidade + ", lat: " + to_string(c.latitude)+ ", long: "+ to_string(c.longitude) +" inserida na Tabela Hash.\n";
+            if(N > 20)
+                saida<<mensagem;
+            else
+                std::cout<<mensagem<<endl;
             
             contador++;
 
             //Teste
             /*
-            cout<<c.codigo_estado<<" "
+            std::cout<<c.codigo_estado<<" "
                 <<c.codigo_cidade<<" "
                 <<c.nome_cidade<<" "
                 <<c.latitude<<" "
@@ -117,11 +130,14 @@ void leituraCoordenadas(QuadTree* aux, int N){
             return;
             */
         }       
-        cout<<contador<<" cidades lidas."<<endl;
+        std::cout<<contador<<" cidades lidas."<<endl;
         file.close();
+
+        if(N > 20)
+            saida.close();
     }
     else{
-        cout<<"Erro: arquivo "<<name<<" não encontrado!"<<endl;
+        std::cout<<"Erro: arquivo "<<name<<" não encontrado!"<<endl;
         exit(1);
     }
 }
@@ -129,13 +145,17 @@ void leituraCoordenadas(QuadTree* aux, int N){
 void leituraProcessados(TabelaHash * aux, int N){
     
     if(N > 1431490 || N < 0){
-        cout<<"Erro: Valor de N inválido!"<<endl;
+        std::cout<<"Erro: Valor de N inválido!"<<endl;
         return;
     }
 
+    fstream saida;
+    if(N > 20 && N != 1431490)
+        saida.open("Log-Etapa4.txt",fstream::out);
+
     fstream file;
     string name = "brazil_covid19_cities_processado.csv";
-    file.open(name, fstream::in);
+    file.open(PATH + name, fstream::in);
 
     if(file.is_open()){
         
@@ -170,9 +190,17 @@ void leituraProcessados(TabelaHash * aux, int N){
 
             count++;
 
+            string mensagem = "Cidade: "+ c.getNomeCidade() + ", data: " +c.getData() + ", codigo: "+ to_string(c.getCodigoCidade()) +" inserida na Tabela Hash.\n";
+            if(N > 20)
+                saida<<mensagem;
+            else
+                std::cout<<mensagem<<endl;
+
+            
+
             // Teste
             /*
-            cout<<c.getData()<<" "
+            std::cout<<c.getData()<<" "
                 <<c.getSiglaEstado()<<" "
                 <<c.getNomeCidade()<<" "
                 <<c.getCodigoCidade()<<" "
@@ -182,11 +210,14 @@ void leituraProcessados(TabelaHash * aux, int N){
             return;
             */
         }       
-        cout<<count<<" registros lidos."<<endl;
+        std::cout<<count<<" registros lidos."<<endl;
         file.close();
+
+        if(N > 20)
+            saida.close();
     }
     else{
-        cout<<"Erro: arquivo "<<name<<" não encontrado!"<<endl;
+        std::cout<<"Erro: arquivo "<<name<<" não encontrado!"<<endl;
         exit(1);
     }
 }
@@ -194,15 +225,19 @@ void leituraProcessados(TabelaHash * aux, int N){
 void armazearId(ArvoreB * b, ArvoreAvl * avl,int N){
     
     if(N > 1431490 || N < 0){
-        cout<<"Erro: Valor de N inválido!"<<endl;
+        std::cout<<"Erro: Valor de N inválido!"<<endl;
         return;
     }
+
+    fstream saida;
+    if(N > 20 && N != 1431490)
+        saida.open("Log-Etapa4.txt",fstream::out);
 
     TabelaHash aux(1); //TODO: retirar apos mover função getDia() de lugar
 
     fstream file;
     string name = "brazil_covid19_cities_processado.csv";
-    file.open(name, fstream::in);
+    file.open(PATH + name, fstream::in);
 
     if(file.is_open()){
         
@@ -237,17 +272,25 @@ void armazearId(ArvoreB * b, ArvoreAvl * avl,int N){
             if(avl!= NULL)
             avl->insere(id);
 
+            string mensagem = "Chave " + to_string(id) + " inserida na arvore.\n";
+            if(N > 20)
+                saida<<mensagem;
+            else
+                std::cout<<mensagem<<endl;
+
             count ++;
         }       
-        cout<<count<<" registros lidos."<<endl;
-        cout<<"Deletando Arvore."<<endl;
+        std::cout<<count<<" registros lidos."<<endl;
+        std::cout<<"Deletando Arvore."<<endl;
 
         delete b;
         delete avl;
         file.close();
+        if(N > 20)
+            saida.close();
     }
     else{
-        cout<<"Erro: arquivo "<<name<<" não encontrado!"<<endl;
+        std::cout<<"Erro: arquivo "<<name<<" não encontrado!"<<endl;
         exit(1);
     }
 }
@@ -261,7 +304,7 @@ void menuSelecionado(char a){
             // Inserção de N cidades na quad tree
 
             int n;
-            cout<<"Digite o valor de N: ";
+            std::cout<<"Digite o valor de N: ";
             cin>>n;
 
             QuadTree * a = new QuadTree();
@@ -275,7 +318,7 @@ void menuSelecionado(char a){
             // Inserção de N registros na tabela hash
 
             int n;
-            cout<<"Digite o valor de N: ";
+            std::cout<<"Digite o valor de N: ";
             cin>>n;
 
             TabelaHash * t = new TabelaHash(n*11);
@@ -289,7 +332,7 @@ void menuSelecionado(char a){
             // Inserção de N chaves na árvore AVL
 
             int n;
-            cout<<"Digite o valor de N: ";
+            std::cout<<"Digite o valor de N: ";
             cin>>n;
 
             ArvoreAvl * avl = new ArvoreAvl(true);
@@ -303,9 +346,9 @@ void menuSelecionado(char a){
             // Inserção de N chaves na árvore B
 
             int n,d;
-            cout<<"Digite o valor de N: ";
+            std::cout<<"Digite o valor de N: ";
             cin>>n;
-            cout<<"Digite o valor de d: ";
+            std::cout<<"Digite o valor de d: ";
             cin>>d;
             
             ArvoreB * b = new ArvoreB(d); 
@@ -323,15 +366,15 @@ void menu(){
     char menu;
     while (true)
     {   
-        cout << endl;
-        cout << "[1] - Inserção de N cidades na quad tree" << endl;
-        cout << "[2] - Inserção de N registros na tabela hash" << endl;
-        cout << "[3] - Inserção de N chaves na árvore AVL" << endl;
-        cout << "[4] - Inserção de N chaves na árvore B" << endl;
-        cout << endl;
+        std::cout << endl;
+        std::cout << "[1] - Inserção de N cidades na quad tree" << endl;
+        std::cout << "[2] - Inserção de N registros na tabela hash" << endl;
+        std::cout << "[3] - Inserção de N chaves na árvore AVL" << endl;
+        std::cout << "[4] - Inserção de N chaves na árvore B" << endl;
+        std::cout << endl;
         do
         {
-            cout << "Digite uma opcao do menu ou 'q' para continuar: ";
+            std::cout << "Digite uma opcao do menu ou 'q' para continuar: ";
             cin >> menu;
         } while (((menu < '0' || menu > '5') && (menu < 'a' || menu > 'z')) && menu != 'q');
 
@@ -369,45 +412,113 @@ void etapa4(){
 
 // Etapa 5 - Analise das estruturas de dados balanceada
 void etapa5(){
-    
+
+    cout<<"\n\nETAPA INCOMPLETA!"<<endl;
+
+    /*
+        S1) Obter o total de casos de uma cidade;
+        S2) Obter o total de casos nas cidades contidas no intervalo 
+        [(x0, y0), (x1, y1)], onde x0 e x1 são latitudes e y0 e y1 são longitude.
+
+        10.000
+        50.000
+        100.000
+        500.000
+        1.000.000
+
+        Árvore AVL
+        Árvore B (d = 20)
+        Árvore B (d = 200)
+
+
+    */
+
+    int valores [5] = {10000, 50000, 100000, 500000, 1000000};
+
+    for(int i = 0; i < 5; i ++){
+
+        //Tabela hash Para Auxiliar
+        TabelaHash * aux;
+        leituraProcessados(aux,valores[i]);
+        
+        //S1
+        int codigo;
+        std::cout<<"Digite o codigo da cidade: ";
+        cin>>codigo;
+
+        clock_t inicio,fim;
+        inicio = clock();
+
+        ArvoreB * b20 = new ArvoreB(20);
+        armazearId(b20,NULL,valores[i]);
+
+        b20->buscarValue(codigo); //ta sem a data
+
+        ArvoreB * b200 = new ArvoreB(200);
+        armazearId(b200,NULL,valores[i]);
+        b200->buscarValue(codigo); //ta sem a data
+
+        fim = clock();
+        cout<<"Tempo ArvoreB: " <<(fim - inicio)/CLOCKS_PER_SEC<<endl;
+
+        //S2
+        int x,y,tam;
+        std::cout<<"Digite o quadrante na forma (x,y,tam): ";
+        cin>>x>>y>>tam;
+
+        inicio = 0;
+        fim = 0;
+        inicio = clock();
+
+        QuadTree * a;
+        leituraCoordenadas(a,valores[i]);
+        a->buscaQuadrante(x,y,tam);
+
+        fim = clock();
+        cout<<"Tempo QuadTree: " <<(fim - inicio)/CLOCKS_PER_SEC<<endl;
+    }
+
 }
 
-int main(){
+int main(int tam_args, char ** args){
 
-    srand(0);
+    if(tam_args == 1)
+        exit(1);
+    
+    PATH = args[1];
 
-    cout<<"----- Etapa 1 -----"<<endl;
-    cout<<"Lendo arquivo brazil_cities_coordinates.csv ..."<<endl;
+    std::cout<<"----- Etapa 1 -----"<<endl;
+    std::cout<<"Lendo arquivo brazil_cities_coordinates.csv ..."<<endl;
 
     QuadTree * a = new QuadTree();
     etapa1(a);
 
     //--------------------------------------------------------------------
 
-    cout<<"\n----- Etapa 2 -----"<<endl;
-    cout<<"Lendo arquivo brazil_covid19_cities_processado.csv ..."<<endl;
+    std::cout<<"\n----- Etapa 2 -----"<<endl;
+    std::cout<<"Lendo arquivo brazil_covid19_cities_processado.csv ..."<<endl;
     
     TabelaHash * tabela = new TabelaHash(1431490*11);
     etapa2(tabela);
-    cout<<tabela->getColisoes()<<" colisoes."<<endl;
+    std::cout<<tabela->getColisoes()<<" colisoes."<<endl;
 
     //--------------------------------------------------------------------
 
-    cout<<"\n----- Etapa 3-----"<<endl;
-    cout<<"Testando implementaçãos ArvoreB e ArvoreAvl..."<<endl; 
+    std::cout<<"\n----- Etapa 3-----"<<endl;
+    std::cout<<"Testando implementaçãos ArvoreB e ArvoreAvl..."<<endl; 
     
     etapa3();
 
     //--------------------------------------------------------------------
 
-    cout<<"\n----- Etapa 4 -----"<<endl;
-    cout<<"Modulo de Testes"<<endl;
+    std::cout<<"\n----- Etapa 4 -----"<<endl;
+    std::cout<<"Modulo de Testes"<<endl;
 
     etapa4();
 
     //--------------------------------------------------------------------
 
-    cout<<"\n----- Etapa 5 -----"<<endl;
+    std::cout<<"\n----- Etapa 5 -----"<<endl;
     etapa5();
     
     return 0;
