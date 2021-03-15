@@ -438,7 +438,7 @@ void etapa5(){
     for(int i = 0; i < 5; i ++){
 
         //Tabela hash Para Auxiliar
-        TabelaHash * aux;
+        TabelaHash * aux = new TabelaHash(valores[5]*11);
         leituraProcessados(aux,valores[i]);
         
         //S1
@@ -460,30 +460,33 @@ void etapa5(){
 
         fim = clock();
         cout<<"Tempo ArvoreB: " <<(fim - inicio)/CLOCKS_PER_SEC<<endl;
-
-        //S2
-        int x,y,tam;
-        std::cout<<"Digite o quadrante na forma (x,y,tam): ";
-        cin>>x>>y>>tam;
-
-        inicio = 0;
-        fim = 0;
-        inicio = clock();
-
-        QuadTree * a;
-        leituraCoordenadas(a,valores[i]);
-        a->buscaQuadrante(x,y,tam);
-
-        fim = clock();
-        cout<<"Tempo QuadTree: " <<(fim - inicio)/CLOCKS_PER_SEC<<endl;
+        cout<<endl;
     }
+
+    //S2
+    int x,y,tam;
+    std::cout<<"Digite o quadrante na forma (x,y,tam): ";
+    cin>>x>>y>>tam;
+
+    clock_t inicio,fim;
+    inicio = clock();
+
+    QuadTree * a = new QuadTree();
+    leituraCoordenadas(a,5570);
+    a->buscaQuadrante(x,y,tam);
+
+    fim = clock();
+    cout<<"Tempo QuadTree: " <<(fim - inicio)/CLOCKS_PER_SEC<<endl;
 
 }
 
 int main(int tam_args, char ** args){
 
-    if(tam_args == 1)
+    if(tam_args == 1){
+        cout<<"Erro: Esqueceu de passar o caminho para pasta!"<<endl;
         exit(1);
+    }
+
     
     PATH = args[1];
 
