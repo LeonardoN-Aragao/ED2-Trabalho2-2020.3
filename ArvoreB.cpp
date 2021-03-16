@@ -5,7 +5,6 @@ using namespace std;
 
 ArvoreB::ArvoreB (int m){
     raiz = NULL;
-    insercoes = 0;
     comparacao = 0;
     d = m;
 }
@@ -25,10 +24,10 @@ ArvoreB::~ArvoreB(){
     auxDeletarArv(raiz);
 }
 
-NoB* ArvoreB::buscarValue(int value){
+bool ArvoreB::buscarValue(int value){
     
     if(raiz == NULL)
-        return NULL;
+        return false;
     else
         return raiz->buscaNo(value);
 }
@@ -41,14 +40,11 @@ void ArvoreB::InserirNoB(int value){
         raiz = new NoB(d);
         raiz->getValores()[0]=value;
         raiz->incrementaQuantChaves();
-        insercoes++;
     }
     else
     {
         if(raiz->getNumChaves() != 2*d-1)
-        {
             raiz->insereValor(value);
-        }
         else
         {
             NoB * aux = new NoB(d);
@@ -58,6 +54,7 @@ void ArvoreB::InserirNoB(int value){
             
             if (aux->getValores()[0] < value)
                 i++;
+            comparacao++;
             
             aux->getFilhos()[i]->insereValor(value);
             raiz = aux;

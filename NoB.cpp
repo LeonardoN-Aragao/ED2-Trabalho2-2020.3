@@ -26,7 +26,7 @@ bool NoB::isFolha(){
     return true;
 }
 
-NoB* NoB::buscaNo(int value){
+bool NoB::buscaNo(int value){
 
     //Procura posição
     int aux= 0;
@@ -35,11 +35,11 @@ NoB* NoB::buscaNo(int value){
 
     //Verifica se achou o valor na posição
     if(valores[aux] == value)
-        return this;
+        return true;
     
     //Se o nó atual não é folha continua buscando
     if(this->isFolha())
-        return NULL;
+        return false;
     return filhos[aux]->buscaNo(value);
 }
 

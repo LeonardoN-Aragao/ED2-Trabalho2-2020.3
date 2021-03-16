@@ -14,7 +14,7 @@ class NoB{
         NoB** getFilhos() {return filhos;}
         int getNumChaves() {return numChaves;}
         void setValores(int * id) {valores = id;}
-        NoB* buscaNo(int id); 
+        bool buscaNo(int id); 
         void split(int id, NoB* p);
         void insereValor(int valor);
         void incrementaQuantChaves() { numChaves++;}
