@@ -38,17 +38,27 @@ int TabelaHash::auxSearch(int chave, int iteracoes){
     
     for(int i = 0; i < iteracoes; i++){
         
-        int resposta = linear(chave,i);
+        int resposta = dupla(chave,i);
 
         if (resposta == chave || resposta == -1)
             break;
         else{
 
-            resposta = dupla(chave,i);
+            resposta = linear(chave,i);
             if (resposta == chave || resposta == -1)
                 break;
         }
     }
 
     return resposta;
+}
+
+vector<InfoCidade> TabelaHash::getRegistros(int n){
+    vector<InfoCidade> vet;
+
+    for(int i = 0; i< n; i++){
+        vet.push_back(tabela[rand()%tamanho]);
+    }
+
+    return vet;
 }
