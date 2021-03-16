@@ -7,7 +7,6 @@
 
 using namespace std;
 
-//TODO: Tirar essa variavel global
 string PATH;
 
 /*
@@ -70,7 +69,7 @@ void leituraCoordenadas(QuadTree* aux, int N){
 
     fstream saida;
     if(N > 20 && N != 5570)
-        saida.open("Log-Etapa4.txt",fstream::out);
+        saida.open("Log-Etapa4.txt");
 
     fstream file;
     string name = "brazil_cities_coordinates.csv";
@@ -151,7 +150,7 @@ void leituraProcessados(TabelaHash * aux, int N){
 
     fstream saida;
     if(N > 20 && N != 1431490)
-        saida.open("Log-Etapa4.txt",fstream::out);
+        saida.open("Log-Etapa4.txt");
 
     fstream file;
     string name = "brazil_covid19_cities_processado.csv";
@@ -222,7 +221,7 @@ void leituraProcessados(TabelaHash * aux, int N){
     }
 }
 
-void armazearId(ArvoreB * b, ArvoreAvl * avl,int N){
+void inserirId(ArvoreB * b, ArvoreAvl * avl,int N){
     
     if(N > 1431490 || N < 0){
         std::cout<<"Erro: Valor de N inválido!"<<endl;
@@ -231,7 +230,7 @@ void armazearId(ArvoreB * b, ArvoreAvl * avl,int N){
 
     fstream saida;
     if(N > 20 && N != 1431490)
-        saida.open("Log-Etapa4.txt",fstream::out);
+        saida.open("Log-Etapa4.txt");
 
     TabelaHash aux(1); //TODO: retirar apos mover função getDia() de lugar
 
@@ -295,6 +294,21 @@ void armazearId(ArvoreB * b, ArvoreAvl * avl,int N){
     }
 }
 
+void armazenarId(TabelaHash * aux, ArvoreB * b, ArvoreAvl * avl,int N){
+
+    vector<InfoCidade> vet = aux->getRegistros(N);
+
+    for(int i = 0; i < N; i++){
+        long id = aux->getDia(vet[i].getData())*vet[i].getCodigoCidade();
+
+        if(b != NULL)
+            b->InserirNoB(id); 
+
+        if(avl != NULL)
+            avl->insere(id);
+    }
+}
+
 void menuSelecionado(char a){
 
     switch (a){
@@ -336,7 +350,7 @@ void menuSelecionado(char a){
             cin>>n;
 
             ArvoreAvl * avl = new ArvoreAvl(true);
-            armazearId(NULL,avl,n);
+            inserirId(NULL,avl,n);
             //delete avl;
 
             break;
@@ -352,7 +366,7 @@ void menuSelecionado(char a){
             cin>>d;
             
             ArvoreB * b = new ArvoreB(d); 
-            armazearId(b,NULL,n);
+            inserirId(b,NULL,n);
 
             break;
         }
@@ -402,7 +416,7 @@ void etapa3(){
     ArvoreB * b = new ArvoreB(200); 
     ArvoreAvl * avl = new ArvoreAvl(true);
 
-    armazearId(b,avl,1431490);
+    inserirId(b,avl,1431490);
 }
 
 // Etapa 4 - Modulo de Testes
@@ -411,73 +425,121 @@ void etapa4(){
 }
 
 // Etapa 5 - Analise das estruturas de dados balanceada
-void etapa5(){
+void etapa5(TabelaHash * aux){
 
-    cout<<"\n\nETAPA INCOMPLETA!"<<endl;
+    fstream saida;
+    saida.open("saida.txt");
 
-    /*
-        S1) Obter o total de casos de uma cidade;
-        S2) Obter o total de casos nas cidades contidas no intervalo 
-        [(x0, y0), (x1, y1)], onde x0 e x1 são latitudes e y0 e y1 são longitude.
+    if(saida.is_open()){
 
-        10.000
-        50.000
-        100.000
-        500.000
-        1.000.000
+        int valores [5] = {10000, 50000, 100000, 500000, 1000000};
 
-        Árvore AVL
-        Árvore B (d = 20)
-        Árvore B (d = 200)
+        for(int m = 0; m < 5; m++){
 
+            std::cout<<"\nM: "<<m<<endl;
 
-    */
+            double tempo_insercao_b20,tempo_insercao_b200,tempo_insercao_avl,tempo_insercao_quad;
+            double tempo_busca_b20,tempo_busca_b200,tempo_busca_avl,tempo_busca_quad;
+            clock_t inicio,fim;
 
-    int valores [5] = {10000, 50000, 100000, 500000, 1000000};
+            //Tabela hash Para Auxiliar
 
-    for(int i = 0; i < 5; i ++){
+            for(int i = 0; i < 5; i ++){
 
-        //Tabela hash Para Auxiliar
-        TabelaHash * aux = new TabelaHash(valores[5]*11);
-        leituraProcessados(aux,valores[i]);
-        
-        //S1
-        int codigo;
-        std::cout<<"Digite o codigo da cidade: ";
-        cin>>codigo;
+                ArvoreAvl * avl = new ArvoreAvl(true);
+                ArvoreB * b20 = new ArvoreB(20);
+                ArvoreB * b200 = new ArvoreB(200);
+                QuadTree * a = new QuadTree();
+                
+                //---------- S1 ----------
+                int codigo;
+                std::cout<<"\nN: "<<valores[i]<<endl;
+                std::cout<<"S1) obter o total de casos de uma cidade"<<endl;
+                std::cout<<"Digite o codigo da cidade: ";
+                cin>>codigo;
 
-        clock_t inicio,fim;
-        inicio = clock();
+                string data = "2020-06-19"; //data escolhida aleatoriamente apenas pq precisa dela
+                bool encontrado = false;
 
-        ArvoreB * b20 = new ArvoreB(20);
-        armazearId(b20,NULL,valores[i]);
+                //Insere Avl
+                inicio = clock();
+                armazenarId(aux,NULL,avl,valores[i]);
+                tempo_insercao_avl = (double) (clock() - inicio)/CLOCKS_PER_SEC; 
 
-        b20->buscarValue(codigo); //ta sem a data
+                //Busca Avl
+                inicio = clock();
 
-        ArvoreB * b200 = new ArvoreB(200);
-        armazearId(b200,NULL,valores[i]);
-        b200->buscarValue(codigo); //ta sem a data
+                if(avl->busca(aux->getDia(data)*codigo) != NULL)
+                    encontrado = true;
 
-        fim = clock();
-        cout<<"Tempo ArvoreB: " <<(fim - inicio)/CLOCKS_PER_SEC<<endl;
-        cout<<endl;
+                cout<<"Resultado avl: "<<encontrado<<endl;
+                tempo_busca_avl = (double)(clock() - inicio)/CLOCKS_PER_SEC;
+
+                //Insere B20
+                inicio = clock();
+                armazenarId(aux,b20,NULL,valores[i]);
+                tempo_insercao_b20 = (double) (clock() - inicio)/CLOCKS_PER_SEC; 
+
+                //Busca B20
+                inicio = clock();
+                encontrado = b20->buscarValue(aux->getDia(data)*codigo);
+                cout<<"Resultado B20: "<<encontrado<<endl;
+                tempo_busca_b20 = (double) (clock() - inicio)/CLOCKS_PER_SEC;
+
+                //Insere B200
+                inicio = clock();
+                armazenarId(aux,b200,NULL,valores[i]);
+                tempo_insercao_b200 = (double) (clock() - inicio)/CLOCKS_PER_SEC;
+
+                //Busca B200
+                inicio = clock();
+                encontrado = b200->buscarValue(aux->getDia(data)*codigo);
+                cout<<"Resultado B200: "<<encontrado<<endl;
+                tempo_busca_b200 = (double) (clock() - inicio)/CLOCKS_PER_SEC;
+
+                //Resultado da busca
+                if(encontrado == true){
+                    InfoCidade ic = aux->getCidade(aux->search(data,codigo));
+                    cout<<"Total de casos de "<<ic.getNomeCidade()<<": "<<ic.getCasos()<<endl;
+                }
+                printf("\n");
+
+                //---------- S2 ----------
+                int x,y,tam;
+                std::cout<<"S2) Obter o total de casos nas cidades contidas no intervalo"<<endl;
+                std::cout<<"Digite o quadrante na forma (x,y,tam): ";
+                cin>>x>>y>>tam;
+
+                //Insere Quad
+                inicio = clock();
+                leituraCoordenadas(a,5570);
+                tempo_insercao_quad = (double) (clock() - inicio)/CLOCKS_PER_SEC;
+
+                //Busca Quad
+                inicio = clock();
+                vector<Cidade> vetCidade = a->buscaQuadrante(x,y,tam);
+                tempo_busca_quad = (double) (clock() - inicio)/CLOCKS_PER_SEC;    
+
+                //Mostra resultado na tela
+                int casos = 0;
+                for(int c = 0; c < vetCidade.size(); c++){
+                    casos += vetCidade[c].codigo_cidade;
+                }
+
+                //Salvando no saida.txt
+                saida<<"Valor de N: "<< valores[i]<<endl;
+                saida<<"Avl tempo_busca: "<<tempo_busca_avl<<" tempo_insercao: "<<tempo_insercao_avl<<" comparacoes: "<<avl->getComparacao()<<endl;
+                saida<<"B20 tempo_busca: "<<tempo_busca_b20<<" tempo_insercao: "<<tempo_insercao_b20<<" comparacoes: "<<endl;
+                saida<<"B200 tempo_busca: "<<tempo_busca_b200<<" tempo_insercao: "<<tempo_insercao_b200<<" comparacoes: "<<endl;
+                saida<<"Quad tempo_busca: "<<tempo_busca_quad<<" tempo_insercao: "<<tempo_insercao_quad<<" comparacoes: "<<endl;
+                saida<<endl;
+            }
+        }
     }
-
-    //S2
-    int x,y,tam;
-    std::cout<<"Digite o quadrante na forma (x,y,tam): ";
-    cin>>x>>y>>tam;
-
-    clock_t inicio,fim;
-    inicio = clock();
-
-    QuadTree * a = new QuadTree();
-    leituraCoordenadas(a,5570);
-    a->buscaQuadrante(x,y,tam);
-
-    fim = clock();
-    cout<<"Tempo QuadTree: " <<(fim - inicio)/CLOCKS_PER_SEC<<endl;
-
+    else{
+        cout<<"Erro não foi possivel encontrar o arquivo \"saida.txt\"."<<endl;
+        exit(1);
+    }
 }
 
 int main(int tam_args, char ** args){
@@ -522,7 +584,7 @@ int main(int tam_args, char ** args){
     //--------------------------------------------------------------------
 
     std::cout<<"\n----- Etapa 5 -----"<<endl;
-    etapa5();
+    etapa5(tabela);
     
     return 0;
 }
