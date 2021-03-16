@@ -1,0 +1,12 @@
+Valor de N: 10000
+Avl tempo_busca: 2.5e-05 tempo_insercao: 0.010182 comparacoes: 10001
+B20 tempo_busca: 1.8e-05 tempo_insercao: 0.009247 comparacoes: 
+B200 tempo_busca: 2.4e-05 tempo_insercao: 0.006989 comparacoes: 
+Quad tempo_busca: 1.5e-05 tempo_insercao: 0.022844 comparacoes: 
+
+Valor de N: 50000
+Avl tempo_busca: 1.8e-05 tempo_insercao: 0.039097 comparacoes: 50001
+B20 tempo_busca: 1.7e-05 tempo_insercao: 0.025583 comparacoes: 
+B200 tempo_busca: 2.1e-05 tempo_insercao: 0.027131 comparacoes: 
+Quad tempo_busca: 1.4e-05 tempo_insercao: 0.016868 comparacoes: 
+

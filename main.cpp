@@ -129,7 +129,6 @@ void leituraCoordenadas(QuadTree* aux, int N){
             return;
             */
         }       
-        std::cout<<contador<<" cidades lidas."<<endl;
         file.close();
 
         if(N > 20)
@@ -403,6 +402,7 @@ void menu(){
 // Etapa 1 - Ler brazil_cities_coordinates.csv e armazenar na QuadTree
 void etapa1(QuadTree * aux){
     leituraCoordenadas(aux,5570);
+    std::cout<<"5570 cidades lidas."<<endl;
 }
 
 // Etapa 2 - Ler brazil_covid19_cities_processado.csv e armazenar na Tabela Hash
@@ -449,7 +449,7 @@ void etapa5(TabelaHash * aux){
                 ArvoreAvl * avl = new ArvoreAvl(true);
                 ArvoreB * b20 = new ArvoreB(20);
                 ArvoreB * b200 = new ArvoreB(200);
-                QuadTree * a = new QuadTree();
+                QuadTree * quad = new QuadTree();
                 
                 //---------- S1 ----------
                 int codigo;
@@ -512,15 +512,16 @@ void etapa5(TabelaHash * aux){
 
                 //Insere Quad
                 inicio = clock();
-                leituraCoordenadas(a,5570);
+                leituraCoordenadas(quad,5570);
                 tempo_insercao_quad = (double) (clock() - inicio)/CLOCKS_PER_SEC;
 
                 //Busca Quad
                 inicio = clock();
-                vector<Cidade> vetCidade = a->buscaQuadrante(x,y,tam);
+                vector<Cidade> vetCidade = quad->buscaQuadrante(x,y,tam);
                 tempo_busca_quad = (double) (clock() - inicio)/CLOCKS_PER_SEC;    
 
                 //Mostra resultado na tela
+                cout<<vetCidade.size()<<" cidades encontradas."<<endl;
                 int casos = 0;
                 for(int c = 0; c < vetCidade.size(); c++){
                     casos += vetCidade[c].codigo_cidade;
